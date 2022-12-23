@@ -2,7 +2,7 @@
 % Please edit documentation in R/Sylamer_Tools.R
 \name{create_sylamer_script}
 \alias{create_sylamer_script}
-\title{Generate shell script to run Slamer in one or multiple sorted lists of genes}
+\title{Generate shell script to run Sylamer in one or multiple sorted lists of genes}
 \usage{
 create_sylamer_script(
   utrFile = "dm3_flybase_3utrs.fa",
@@ -45,7 +45,7 @@ create_sylamer_script(
 a file ready to run "sh sylamer_command.sh"
 }
 \description{
-Generate shell script to run Slamer in one or multiple sorted lists of genes
+Generate shell script to run Sylamer in one or multiple sorted lists of genes
 }
 \examples{
 

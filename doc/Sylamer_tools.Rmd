@@ -1,19 +1,30 @@
+---
+title: "Sylamer tools"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sylamer tools}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
-# SylamerTools
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
 
-<!-- badges: start -->
-<!-- badges: end -->
+# Instalation and Setup
 
-Contents
-========
+```{r setup}
+#install library
+#devtools::install_github("ipatop/SylamerTools")
+library(SylamerTools)
+```
 
- * [Why?](#why)
- * [Installation](#installation)
- * [Usage](#usage)
- 
-### Why?
+# Description
 
-This package contains three functions that can be used to aid with running [Sylamer](https://github.com/micans/sylamer).
+This package contains three functions that can be used to aid with running [Sylamer](https://github.com/micans/sylamer) Stijn van Dongen, Cei Abreu-Goodger & Anton J. Enright; Nature Methods(2008), PMID: 18978784.
 
 It contains:
 
@@ -23,21 +34,6 @@ It contains:
 
 Sylamer is a tool that analyzes expression data to identify microRNA targets and small interfering (si)RNA off-target signals. It takes as input a ranked list of 3' untranslated regions (UTRs) that have been upregulated or downregulated following an miRNA or RNAi experiment, and generates a landscape plot showing the occurrence biases of various words across the gene ranking using hypergeometric P-values. 
 
-### Installation
-
-You can install the development version of SylamerTools like so:
-
-``` r
-devtools::install_github("ipatop/SylamerTools")
-```
-
-### Usage
-
-
-``` r
-library(SylamerTools)
-## basic example code
-```
 # Sort genes 
 
 Sylamer requires as input a sorted list of genes from up to down regulated. The function `sort_forSylamer` will sort any list of genes by any column name. 
@@ -127,8 +123,7 @@ read.delim(paste0(system.file("extdata", package = "SylamerTools"),"/L2FcSh_syla
 ```{r}
 sylamerplots(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab=paste0(system.file("extdata", package = "SylamerTools"),"/L2FcSh_sylamer.output.tab"),outName ="shRNA_fake")
 ```
-![Sylamer](sylamerplot.pdf)
+
 ```{r}
 SylamerTools::sylamerplots(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab=paste0(system.file("extdata", package = "SylamerTools"),"/L2FcSh_sylamer.output.tab"),greylines = T,outName = "shRNA_fake_markingGrey",free_ylim = T)
 ```
-![SylamerGrey](shRNA_fake_markingGrey.pdf)

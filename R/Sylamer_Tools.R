@@ -91,7 +91,9 @@ create_sylamer_script <- function(utrFile="dm3_flybase_3utrs.fa",kSylamer=6,kMar
 #' @param lowOligos Number of low oligos to plot. Defauls is 0
 #' @param outName name for the plot output. Default is "sylamerplot"
 #' @param greylines Boolean, To plot or not greay background oligos. Default is F
-#' @param kSylamer Default is 6
+#'@param kSylamer Oligo letter length or Word size, has to be the same length as those in the "words" file. Default is 6
+#' @param kMarkov Size of a smaller word to be used for correcting composition biases. Default is 4
+#' @param free_ylim Boolean, if TRUE then y lim will be the min and max values from Sylamr output. If FALSE, then ylim=(-10,10)
 #'
 #' @return a file ready to run "sh sylamer_command.sh"
 #'
@@ -103,7 +105,8 @@ create_sylamer_script <- function(utrFile="dm3_flybase_3utrs.fa",kSylamer=6,kMar
 #'
 #'
 
-sylamerplots<-function(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab="shRNA_sylamer.output.tab",topOligos=0,lowOligos=0,outName="sylamerplot",greylines=F,kSylamer=6,kMarkov =4,winSize=200,plot=T){
+sylamerplots<-function(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab="shRNA_sylamer.output.tab",topOligos=0,lowOligos=0,outName="sylamerplot",greylines=F,kSylamer=6,kMarkov =4,winSize=200,plot=T,free_ylim=F){
+
   # How many best words should I highlight in the image?
   topOligos <- topOligos
   lowOligos <- lowOligos
@@ -127,8 +130,13 @@ sylamerplots<-function(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab="shRNA_
 
   pdf(paste0(outName,".pdf"))
 
-  plot(NULL, xlab="3UTR sequences sorted", ylab="log10(enrichment P-value)", axes=T,  main=paste0("Sylamer landscape using words of length: ",kSylamer, " for ",outName),
-       ylim=c(-10,10), xlim=range(xVals))
+
+  if(free_ylim){
+    .ylim=c(yMin,yMax)
+  }else{
+    .ylim=c(-10,10)
+  }
+  plot(NULL, xlab="3UTR sequences sorted", ylab="log10(enrichment P-value)", axes=T,  main=paste0("Sylamer landscape using words of length: ",kSylamer, " for ",outName),ylim=.ylim,xlim=range(xVals) )
   #ylim=c(round(yMin-yRange/10),round(yMax+yRange/10)), xlim=range(xVals))
 
   # It can save time to plot no more than ~1,000 lines (particularly for all words of length 7 or 8)
@@ -194,8 +202,15 @@ sylamerplots<-function(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab="shRNA_
 
   if(plot==T){
 
-    plot(NULL, xlab="3UTR sequences sorted", ylab="log10(enrichment P-value)", axes=T,  main=paste0("Sylamer landscape using words of length: ",kSylamer, " for ",outName),
-         ylim=c(-10,10), xlim=range(xVals))
+    if(free_ylim){
+      .ylim=c(yMin,yMax)
+    }else{
+      .ylim=c(-10,10)
+    }
+
+    plot(NULL, xlab="3UTR sequences sorted", ylab="log10(enrichment P-value)", axes=T,  main=paste0("Sylamer landscape using words of length: ",kSylamer, " for ",outName),,ylim=.ylim,xlim=range(xVals) )
+
+
     #ylim=c(round(yMin-yRange/10),round(yMax+yRange/10)), xlim=range(xVals))
 
     # It can save time to plot no more than ~1,000 lines (particularly for all words of length 7 or 8)

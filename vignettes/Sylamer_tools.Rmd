@@ -121,8 +121,9 @@ read.delim(paste0(system.file("extdata", package = "SylamerTools"),"/L2FcSh_syla
 **Plot**
 
 ```{r}
-sylamerplots(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab=paste0(system.file("extdata", package = "SylamerTools"),"/shRNA_sylamer.output.tab"))
+sylamerplots(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab=paste0(system.file("extdata", package = "SylamerTools"),"/L2FcSh_sylamer.output.tab"),outName ="shRNA_fake")
 ```
+
 ```{r}
-sylamerplots(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab=paste0(system.file("extdata", package = "SylamerTools"),"/shRNA_sylamer.output.tab"),greylines = T)
+sylamerplots(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab=paste0(system.file("extdata", package = "SylamerTools"),"/L2FcSh_sylamer.output.tab"),greylines = T,outName = "shRNA_fake_markingGrey",free_ylim = T)
 ```

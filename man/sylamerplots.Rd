@@ -14,7 +14,8 @@ sylamerplots(
   kSylamer = 6,
   kMarkov = 4,
   winSize = 200,
-  plot = T
+  plot = T,
+  free_ylim = F
 )
 }
 \arguments{
@@ -30,7 +31,11 @@ sylamerplots(
 
 \item{greylines}{Boolean, To plot or not greay background oligos. Default is F}
 
-\item{kSylamer}{Default is 6}
+\item{kSylamer}{Oligo letter length or Word size, has to be the same length as those in the "words" file. Default is 6}
+
+\item{kMarkov}{Size of a smaller word to be used for correcting composition biases. Default is 4}
+
+\item{free_ylim}{Boolean, if TRUE then y lim will be the min and max values from Sylamr output. If FALSE, then ylim=(-10,10)}
 }
 \value{
 a file ready to run "sh sylamer_command.sh"
@@ -41,5 +46,6 @@ Plot the output of Sylamer
 \examples{
 
 #create_sylamer_script(utrFile="dm3_flybase_3utrs.fa",kSylamer=6,kMarkov =4,winSize=200,sylamer="/opt/linux64bin/sylamer",sylOutput="shRNA_sylamer.output.tab",imageOut="shRNA_image.output.pdf",DEsorted=c("ForSylamer.txt","ForSylamer_2.txt"), extras = "-a 10 -aa 5 --funny-ok", overwrite=T,sylamer_comand="sylamer_command.sh")
+
 
 }
