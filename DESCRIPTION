@@ -13,3 +13,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+URL: https://github.com/ipatop/SylamerTools
+BugReports: https://github.com/ipatop/SylamerTools/issues
