@@ -1,0 +1,128 @@
+---
+title: "Sylamer tools"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Sylamer tools}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Instalation and Setup
+
+```{r setup}
+#install library
+#devtools::install_github("ipatop/SylamerTools")
+library(SylamerTools)
+```
+
+# Description
+
+This package contains three functions that can be used to aid with running [Sylamer](https://github.com/micans/sylamer) Stijn van Dongen, Cei Abreu-Goodger & Anton J. Enright; Nature Methods(2008), PMID: 18978784.
+
+It contains:
+
+1. A function to sort genes by any numerical condition
+2. A function to create a shell commando to run Sylamer
+3. A function to plot the Sylamer output
+
+Sylamer is a tool that analyzes expression data to identify microRNA targets and small interfering (si)RNA off-target signals. It takes as input a ranked list of 3' untranslated regions (UTRs) that have been upregulated or downregulated following an miRNA or RNAi experiment, and generates a landscape plot showing the occurrence biases of various words across the gene ranking using hypergeometric P-values. 
+
+# Sort genes 
+
+Sylamer requires as input a sorted list of genes from up to down regulated. The function `sort_forSylamer` will sort any list of genes by any column name. 
+
+Input requirements: a column named "gene", another column to sort genes by. Any other column will be ignored.
+
+<table>
+
+gene      |  log2FoldChange |
+--------  | --------------- | 
+mthl8     | 0.05805309      |	
+--------  | --------------- | 
+Lsp1gamma | 2.09023047      |	
+
+</table>
+
+Output: a file with the sorted genes ready to input into sylamer
+
+**Input example**
+```{r}
+#This is how the input looks like
+head(read.table(file = paste0(system.file("extdata", package = "SylamerTools"),"/res.txt"),header = T))
+```
+**Output example**
+
+```{r}
+sort_forSylamer(DEres = paste0(system.file("extdata", package = "SylamerTools"),"/res.txt"),sortBy = "log2FoldChange",outName =paste0(system.file("extdata", package = "SylamerTools") ,"/ForSylamer.txt"))
+
+head(read.table(file = paste0(system.file("extdata", package = "SylamerTools"),"/ForSylamer.txt") ,header = T))
+```
+
+# Create sylamer command
+
+The function `create_sylamer_script` will return a file ready to run.
+
+The output from this function can be run in unix as follows:
+
+```sh
+sh sylamer_command.sh
+```
+
+This function takes the following options.
+
++ `utrFile`: File with the UTR sequences. Defauls is "dm3_flybase_3utrs.fa"
++ `kSylamer`: Oligo letter length or Word size, has to be the same length as those in the "words" file. Default is 6
++ `kMarkov`: Size of a smaller word to be used for correcting composition biases. Default is 4
++ `winSize`: How many sequences should be added in each consecutive window. Default is 200
++ `sylamer`: Sylamer executable path. Default is "/opt/linux64bin/sylamer"
++ `sylOutput`: Name of output file to write table in. Default is "shRNA_sylamer.output.tab"
++ `imageOut`: Name of output file to write plot in. Default is "shRNA_image.output.pdf"
++ `DEsorted`: Name of one or multiple list of sorted genes to input in sylamen. Default is c("ForSylamer.txt","ForSylamer_2.txt")
++ `extras`: Any extra parametere to pass into Sylamer. Default is "-a 10 -aa 5 --funny-ok"
++ `overwrite`: Boolean. If True, the script will overwrite any existing script with the same name. Default is T
++ `sylamer_comand`: Name of the file to write the command into "sylamer_command.sh"
+
+```{r}
+create_sylamer_script(utrFile =  paste0(system.file("extdata", package = "SylamerTools"),"/dm3_flybase_3utrs.fa"), overwrite = T, DEsorted=paste0(system.file("extdata", package = "SylamerTools"),c("/ForSylamer.txt","/ForSylamer_2.txt")))
+```
+
+**Output**
+
+```{r}
+read.delim("sylamer_command.sh",header = F)
+```
+
+# Plot Sylamer output
+
+Sylamer output has to be organized to be able to interpret and plot them. To this end, we wrote a function thatsort the results and plot them. 
+
+It takes the following options:
+
++ `oligosChosen`: Sequences to highlight (Any particular words that you want highlighted) Defaults is =c("TGTAAA","GATGCT")
++ `sylamer.out.tab`: Name of sylamer output to read from. Dafault is "shRNA_sylamer.output.tab"
++ `topOligos`: Number of top oligos to plot. How many best words should I highlight in the image? Defauls is 0
++ `lowOligos`: Number of low oligos to plot. Defauls is 0
++ `outName`: name for the plot output. Default is "sylamerplot"
++ `greylines`: Boolean, To plot or not greay background oligos. Default is F
++ `kSylamer`: Default is 6
+
+**Sylamer Output**
+
+```{r}
+read.delim(paste0(system.file("extdata", package = "SylamerTools"),"/L2FcSh_sylamer.output.tab"))[1:3,1:3]
+```
+**Plot**
+
+```{r}
+sylamerplots(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab=paste0(system.file("extdata", package = "SylamerTools"),"/shRNA_sylamer.output.tab"))
+```
+```{r}
+sylamerplots(oligosChosen=c("TGTAAA","GATGCT"),sylamer.out.tab=paste0(system.file("extdata", package = "SylamerTools"),"/shRNA_sylamer.output.tab"),greylines = T)
+```
